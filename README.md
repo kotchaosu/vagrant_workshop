@@ -1,6 +1,6 @@
 ## Vagrant intro
 
-So you decided to give Vagrant a chance. Even if you won't like it, I think it's thing worth trying. Vagrant can improve your development workflow. Think about possible issues of not using VM:
+So you decided to give Vagrant a chance. Even if you won't like it, it's worth trying. Vagrant can improve your development workflow. Think about possible issues of not using VM:
 
 **local environment painful setup:**
 
@@ -15,16 +15,16 @@ So you decided to give Vagrant a chance. Even if you won't like it, I think it's
 **something else:**
 
 - production contains several nodes - you don't want to flatten the design
-- several projects on one machine lead to mess (different PSQL configs, for example)
+- many projects on the same machine lead to mess (different PSQL configs, for example)
 - you just want to test your Salt config without fear
 
 Actually, you can deal with it without virtualization. Hacking devel servers (if you have any)? Cool, but...
 
-    Do you want risk leaving uncommited changes?
-    Do you think commiting every possible test solution is worth your time?
+    Do you want to risk leaving uncommitted changes?
+    Do you think committing every possible test solution is worth your time?
     Do you collaborate or what?
 
-Vagrant makes dumb easy creating development environment similar to devel/production.
+Vagrant makes creating development environment similar to devel/production easy.
 
     It's local, so you can hack it without conflicting with other devs in your project.
     It's clean, so moving and copying image is simple.
@@ -32,7 +32,7 @@ Vagrant makes dumb easy creating development environment similar to devel/produc
 
 So... Stay with me.
 
-*In the following text "guest" means "local VM" and "host" - "bare metal OS".*
+*In the following text "guest" means "local VM" and "host" - "machine that runs VM".*
 
 # Basic setup
 Installing Vagrant is fairly simple.
@@ -55,7 +55,7 @@ The response should be like this:
 
     You're running an up-to-date version of Vagrant!
 
-To setup your VM you need at least basic image of the OS. We will call them "boxes". List your boxes:
+To setup your VM you need at least basic image of the OS. We will call it "box". List your boxes:
 
     $ vagrant box list
 
@@ -67,7 +67,7 @@ Now you're ready to clone the repo, if you haven't done that already, and build 
 
     $ git clone https://github.com/Zhebr/vagrant_workshop.git
 
-It has completed Vagrantfile, but if you really want completely new to Vagrant - please remove it.
+It has completed Vagrantfile, but if you are completely new to Vagrant - please remove it.
 
     $ cd vagrant_workshop
     $ rm Vagrantfile
@@ -123,7 +123,7 @@ This is default shared directory between host and guest. It's synced folder. Cha
 
 # Vagrantfile
 
-I'm used to keeping my projects in /home/<user> directory. To have "lameland" directory synced there, change line 40 in Vagrantfile:
+I'm used to keeping my projects in /home/username directory. To have "lameland" directory synced there, change line 40 in Vagrantfile:
 
     config.vm.synced_folder "lameland/", "/home/vagrant/lameland/"
 
@@ -135,7 +135,7 @@ Works like charm.
 
 # Building Rails app
 
-Virtual machine is ready for setting up environment for your app. You can, of course, install whole stuff like you used to... However, I encourage you to dig into topic of automated environment setup (Puppet, Ansible etc.). For simplicity of this intro, there is a setup script in our working directory. We don't need this script to run on every boot. We only need it if we have bare machine or we changed something in the script. To achieve this, go to line 65 in Vagrantfile and type:
+Virtual machine is ready for setting up environment for your app. You can, of course, install whole stuff like you used to... However, I encourage you to dig into topic of automated environment setup (Puppet, Ansible etc.). For simplicity of this intro, there is a setup script in our working directory. We don't need this script to run during every boot. We only need it if we have bare machine or we changed something in the script. To achieve this, go to line 65 in Vagrantfile and type:
 
     config.vm.provision "shell", path: "setup.sh"
 
@@ -153,7 +153,7 @@ We can run the app with command (on guest):
 
     $ sudo docker-compose up
 
-Boom! We have Rails server connected to PSQL, both running on guest machine! Can we see the app in web browser? Sadly - no. Keep in mind, Rails server opens guest's port 3000, but it doesn't affect host. What we need here is port forwarding. Assuming port 3000 is busy on host change line 25 in Vagrantfile.
+Boom! We have Rails server connected to PSQL, both running on guest machine! Can we see the app in web browser? Sadly - no. Keep in mind, Rails server opens guest's port 3000, but it doesn't affect host. What we need here is port forwarding. Assuming port 3000 is busy on host, change line 25 in Vagrantfile.
 
     config.vm.network "forwarded_port", guest: 3000, host: 18080
 
@@ -161,11 +161,11 @@ Reboot guest without provisioning:
 
     $ vagrant reload
 
-And type: http://localhost:18080/ in browser. You did it!
+And type: [http://localhost:18080/](http://localhost:18080/) in browser. You did it!
 
-**What next?**
+**What's next?**
 
-Now you can start developing your app. I recommend to dig deeper in Vagrant configuration (read about multi-machines and push), but also to try Docker and docker-compose. It's also good thing to change password to your database (I left this empty, hope you're wiser). **Happy hacking!**
+You can start developing your app now. I recommend to dig deeper into Vagrant configuration (read about multi-machines and push), but also to try Docker and docker-compose. By the way, it's good thing to change database password (I left this empty, hope you're wiser). **Happy hacking!**
 
 # Hardware
 
@@ -187,4 +187,4 @@ Your mates don't need to have Vagrant installed. They just see link or another m
 # Re/sources:
 
 0. [Vagrant](https://www.vagrantup.com/)
-1. [Docker compose](https://docs.docker.com/compose/rails/)
+1. [Docker compose + Rails](https://docs.docker.com/compose/rails/)
